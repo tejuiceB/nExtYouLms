@@ -18,8 +18,8 @@ from decouple import config
 config = Config('.env')  # Assumes the .env file is in the same directory as your settings.py
 
 # Use environment variable for Cloudinary URL
-CLOUDINARY_URL = config('CLOUDINARY_URL', default='cloudinary://414785722153739:DfULH9yUdP3Q2UoORgzNt-M_F5E@duddm6g7q')
-
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET')
 
 # Now use the parsed URL to configure Cloudinary
 # Cloudinary
