@@ -12,6 +12,8 @@ import cloudinary.api
 from decouple import Config, Csv
 from pathlib import Path
 
+from decouple import config
+
 # Initialize the Config object and explicitly specify the .env file location
 config = Config('.env')  # Assumes the .env file is in the same directory as your settings.py
 
@@ -20,17 +22,12 @@ CLOUDINARY_URL = config('CLOUDINARY_URL', default='cloudinary://414785722153739:
 
 
 # Now use the parsed URL to configure Cloudinary
+# Cloudinary
+CLOUDINARY_URL = config('CLOUDINARY_URL')
 cloudinary.config(
     cloud_name=CLOUDINARY_URL.split('@')[1],
     api_key=CLOUDINARY_URL.split(':')[1].split('@')[0],
     api_secret=CLOUDINARY_URL.split(':')[2].split('@')[0],
-)
-
-cloudinary.config( 
-    cloud_name = "duddm6g7q", 
-    api_key = "414785722153739", 
-    api_secret = "DfULH9yUdP3Q2UoORgzNt-M_F5E", # Click 'View API Keys' above to copy your API secret
-    secure=True
 )
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -40,10 +37,9 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&dgr^x)^#^jnys&p9g7djz&vd$1##vz3(c@1fbb3!c6yd^#f-#'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # Change this to True for local development
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', cast=bool, default=False)
 
 ALLOWED_HOSTS = ["nextyou.up.railway.app", "127.0.0.1", "localhost"]  # Added localhost and 127.0.0.1
 
@@ -118,12 +114,12 @@ TEMPLATES = [
     },
 ]
 
-# Provider specific settings
+# Google OAuth
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': '477770344081-i7ohji3vs341dbf06vo74eftglnbfes4.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': config('GOOGLE_CLIENT_ID'),
+            'secret': config('GOOGLE_CLIENT_SECRET'),
             'key': ''
         }
     }
@@ -155,14 +151,15 @@ WSGI_APPLICATION = 'nextyou.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tejuice',
-        'USER': 'teju',
-        'PASSWORD': '7889',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST', default='127.0.0.1'),
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
 
@@ -221,8 +218,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'unknownuser7825@gmail.com'
-EMAIL_HOST_PASSWORD = 'vzmn zujk rxqr yiqb'  # Make sure this is correct
+
+# Email
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 # Cloudinary Django Integration
 
